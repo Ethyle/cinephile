@@ -14,10 +14,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future main() async {
   await dotenv.load(fileName: ".env");
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context ) {
     // Créez une instance de votre service API.
@@ -45,7 +47,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: HomeScreen(),
+        home: const HomeScreen(),
       ),
     );
   }

@@ -31,7 +31,7 @@ class ComicsLoadingState extends ComicsState {
 class ComicsLoadedState extends ComicsState {
   final List<Comic> comics;
   
-  ComicsLoadedState(this.comics);
+  const ComicsLoadedState(this.comics);
 
   @override
   List<Object> get props => [comics];
@@ -40,7 +40,7 @@ class ComicsLoadedState extends ComicsState {
 class ComicsErrorState extends ComicsState {
   final String error;
 
-  ComicsErrorState(this.error);
+  const ComicsErrorState(this.error);
 
   @override
   List<Object> get props => [error];

@@ -4,7 +4,7 @@ class NewsWidget extends StatelessWidget {
   final String imageUrl;
   final String title;
 
-  NewsWidget({
+  const NewsWidget({super.key, 
     required this.imageUrl,
     required this.title,
   });

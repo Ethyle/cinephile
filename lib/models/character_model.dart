@@ -11,8 +11,8 @@ class Character {
     required this.imageUrl,
     this.description = 'Information inconnue',
     this.realName = 'Information inconnue',
-    this.gender = 0,
-    this.birth
+    this.gender = 0, // Assurez-vous que la valeur par défaut est un int
+    this.birth,
   });
 
   factory Character.fromJson(Map<String, dynamic> json) {
@@ -21,10 +21,8 @@ class Character {
       imageUrl: json['image']['medium_url'] ?? 'Information inconnue',
       description: json['description'] ?? 'Information inconnue',
       realName: json['real_name'] ?? 'Information inconnue',
-      gender: json['gender'] ?? 'Information inconnue',
-      birth: json['birth'] ?? 'date inconnue',
+      gender: json['gender'] ?? 0, // Assurez-vous d'utiliser 0 ou un autre int comme valeur par défaut
+      birth: json['birth'],
     );
   }
-
-
 }

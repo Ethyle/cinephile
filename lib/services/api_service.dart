@@ -4,6 +4,7 @@ import '../models/character_model.dart';
 import '../models/movies_model.dart';
 import '../models/news_model.dart';
 import '../models/series_model.dart';
+import '../models/episode_model.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
 
@@ -31,6 +32,35 @@ class ApiService {
     return _getApiData<Series>(url, (json) => Series.fromJson(json));
   }
 
+  
+  // Endpoint pour les episodes
+  Future<List<Episode>> getEpisodesBySeriesId(int seriesId) async {
+    // Constructing the URL to query the API with the series ID as a filter
+    var url = Uri.parse('https://comicvine.gamespot.com/api/episodes?api_key=$apiKey&format=json&filter=series:$seriesId');
+
+    try {
+      var response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+
+        // Check if 'results' is a list and if so, transform each element into an Episode object
+        if (data['results'] is List) {
+          List<dynamic> episodesJson = data['results'];
+          List<Episode> episodes = episodesJson.map((episodeJson) => Episode.fromJson(episodeJson)).toList();
+          return episodes;
+        } else {
+          throw Exception('Expected a list of results but did not find one.');
+        }
+      } else {
+        // Handle other than status 200 OK responses
+        throw Exception('Error fetching episodes: HTTP ${response.statusCode}');
+      }
+    } catch (e) {
+      // Handle exceptions during the API call
+      throw Exception('Exception during API call: $e');
+    }
+  }
   // Endpoint pour les personnages
 Future<List<Character>> getCharacters() async {
   var url = Uri.parse('https://comicvine.gamespot.com/api/characters?api_key=$apiKey&format=json');
@@ -101,6 +131,33 @@ try {
   }
 
 
+// Recherche des Comics
+Future<List<Comic>> searchComics(String query) async {
+  var encodedQuery = Uri.encodeComponent(query);
+  var url = Uri.parse('https://comicvine.gamespot.com/api/search/?api_key=$apiKey&format=json&field_list=name,image&limit=10&resources=issue&query=$encodedQuery');
+  return _getApiData<Comic>(url, (json) => Comic.fromJson(json));
+}
+
+  // Recherche des films
+  Future<List<Movie>> searchMovies(String query) async {
+    var encodedQuery = Uri.encodeComponent(query);
+    var url = Uri.parse('https://comicvine.gamespot.com/api/search/?api_key=$apiKey&format=json&field_list=name,image&limit=10&resources=movie&query=$encodedQuery');
+    return _getApiData<Movie>(url, (json) => Movie.fromJson(json));
+  }
+
+  // Recherche des séries
+  Future<List<Series>> searchSeries(String query) async {
+    var encodedQuery = Uri.encodeComponent(query);
+    var url = Uri.parse('https://comicvine.gamespot.com/api/search/?api_key=$apiKey&format=json&field_list=name,image&limit=10&resources=series&query=$encodedQuery');
+    return _getApiData<Series>(url, (json) => Series.fromJson(json));
+  }
+
+  // Recherche des personnages
+  Future<List<Character>> searchCharacters(String query) async {
+    var encodedQuery = Uri.encodeComponent(query);
+    var url = Uri.parse('https://comicvine.gamespot.com/api/search/?api_key=$apiKey&format=json&field_list=name,image&limit=10&resources=character&query=$encodedQuery');
+    return _getApiData<Character>(url, (json) => Character.fromJson(json));
+  }
 
 
 }

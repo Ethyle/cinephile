@@ -31,7 +31,7 @@ class MoviesLoadingState extends MoviesState {
 class MoviesLoadedState extends MoviesState {
   final List<Movie> movies;
   
-  MoviesLoadedState(this.movies);
+  const MoviesLoadedState(this.movies);
 
   @override
   List<Object> get props => [movies];
@@ -40,7 +40,7 @@ class MoviesLoadedState extends MoviesState {
 class MoviesErrorState extends MoviesState {
   final String error;
 
-  MoviesErrorState(this.error);
+  const MoviesErrorState(this.error);
 
   @override
   List<Object> get props => [error];

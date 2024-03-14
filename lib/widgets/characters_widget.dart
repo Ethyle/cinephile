@@ -5,7 +5,7 @@ import '../screens/character_details_screen.dart';
 class CharacterWidget extends StatelessWidget {
   final Character character;  // Modifier pour passer l'objet Character
 
-  CharacterWidget({required this.character});
+  const CharacterWidget({super.key, required this.character});
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class CharacterWidget extends StatelessWidget {
             // Nom du personnage
             Text(
               character.name,  // Utiliser character.name
-              style: TextStyle(
+              style: TextStyle(color: Colors.white,
                 fontSize: screenWidth * 0.04,
                 fontWeight: FontWeight.bold,
               ),

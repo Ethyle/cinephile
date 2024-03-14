@@ -1,55 +1,113 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart'; 
+import '../blocs/search_bloc.dart'; 
 import '../ui/theme.dart'; 
 
-class SearchScreen extends StatelessWidget {
+class SearchScreen extends StatefulWidget {
+  const SearchScreen({Key? key}) : super(key: key);
+
+  @override
+  _SearchScreenState createState() => _SearchScreenState();
+}
+
+class _SearchScreenState extends State<SearchScreen> {
+  final TextEditingController searchController = TextEditingController();
+
+  void _onSearchSubmitted(String query) {
+    if (query.isNotEmpty) {
+      context.read<SearchBloc>().add(PerformSearchEvent(query));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor, // Remplacez par la couleur de fond de votre choix
-      body: Column(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Comic, film, série...',
-                hintStyle: TextStyle(color: AppColors.bottomBarUnselectedText), 
-                prefixIcon: Icon(Icons.search, color: AppColors.bottomBarUnselectedText), 
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25.0),
-                  borderSide: BorderSide.none,
-                ),
-                filled: true,
-                fillColor: AppColors.backgroundColor, 
-              ),
-            ),
-          ),
-          Expanded(
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+      backgroundColor: AppColors.backgroundColor,
+      body: SingleChildScrollView( 
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
                 children: [
-                  SvgPicture.asset(
-                    '../res/svg/astronaut.svg',
-                    width: 120, 
-                  ),
-                  SizedBox(height: 16), // Un espace entre l'image SVG et le texte
-                  Text(
-                    'Saisissez une recherche pour trouver un comic, film, série ou personnage.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: AppColors.bottomBarUnselectedText,
-                      fontSize: 16,
+                  Expanded(
+                    child: TextField(
+                      controller: searchController,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        hintText: 'Comic, film, série, personnage...',
+                        hintStyle: const TextStyle(color: AppColors.bottomBarUnselectedText),
+                        prefixIcon: const Icon(Icons.search, color: AppColors.bottomBarUnselectedText),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(25.0), borderSide: BorderSide.none),
+                        filled: true,
+                        fillColor: AppColors.backgroundColor,
+                      ),
+                      onSubmitted: _onSearchSubmitted, // Recherche déclenchée sur appui Enter
                     ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.search, color: AppColors.bottomBarUnselectedText),
+                    onPressed: () => _onSearchSubmitted(searchController.text), // Recherche déclenchée sur clic
                   ),
                 ],
               ),
             ),
-          ),
-        ],
+            BlocBuilder<SearchBloc, SearchState>(
+              builder: (context, state) {
+                if (state is SearchLoadingState) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is SearchResultsState) {
+                  return ListView.builder(
+                    shrinkWrap: true, 
+                    physics: NeverScrollableScrollPhysics(), // Désactiver le scrolling sur la ListView
+                    itemCount: state.results.entries.length,
+                    itemBuilder: (context, index) {
+                      final category = state.results.entries.elementAt(index).key;
+                      final titles = state.results.entries.elementAt(index).value;
+
+                      return ExpansionTile(
+                        backgroundColor: AppColors.backgroundColor,
+                        title: Text(category, style: const TextStyle(color: Colors.white)),
+                        children: titles.map((title) => ListTile(
+                          title: Text(title, style: const TextStyle(color: Colors.white)),
+                          onTap: () {
+                            // Naviguer vers le détail de l'élément sélectionné si nécessaire
+                          },
+                        )).toList(),
+                      );
+                    },
+                  );
+                } else if (state is SearchErrorState) {
+                  return Center(
+                    child: Text(state.error, style: const TextStyle(color: Colors.white)),
+                  );
+                } else {
+                  return Center(
+                    child: Column(
+                      children: [
+                        SvgPicture.asset(
+                          'res/svg/astronaut.svg', 
+                          width: 200, 
+                        ),
+                        const SizedBox(height: 20), 
+                        const Text(
+                          'Saisissez une recherche pour trouver un comic, film, série ou personnage.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: AppColors.bottomBarUnselectedText,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
-
 }

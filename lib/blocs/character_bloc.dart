@@ -31,7 +31,7 @@ class CharacterLoadingState extends CharacterState {
 class CharacterLoadedState extends CharacterState {
   final List<Character> characters;
   
-  CharacterLoadedState(this.characters);
+  const CharacterLoadedState(this.characters);
 
   @override
   List<Object> get props => [characters];
@@ -40,7 +40,7 @@ class CharacterLoadedState extends CharacterState {
 class CharacterErrorState extends CharacterState {
   final String error;
 
-  CharacterErrorState(this.error);
+  const CharacterErrorState(this.error);
 
   @override
   List<Object> get props => [error];

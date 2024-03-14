@@ -19,10 +19,10 @@ ThemeData buildAppTheme() {
     primarySwatch: Colors.blue,
     fontFamily: GoogleFonts.nunito().fontFamily,
     scaffoldBackgroundColor: AppColors.backgroundColor,
-    appBarTheme: AppBarTheme(
+    appBarTheme: const AppBarTheme(
       color: AppColors.elementBackground,
     ),
-    textTheme: TextTheme(
+    textTheme: const TextTheme(
       // Définissez ici les styles de texte spécifiques à votre application
     ),
     // Définissez d'autres propriétés de thème selon vos besoins

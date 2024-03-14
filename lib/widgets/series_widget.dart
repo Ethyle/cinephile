@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
 import '../models/series_model.dart';
-import '../screens/series_details_screen.dart'; // Assurez-vous que le chemin d'accès est correct
+import '../screens/series_details_screen.dart';
+import '../ui/theme.dart'; // Assurez-vous d'importer le fichier theme.dart correctement
 
 class SeriesWidget extends StatelessWidget {
-  final Series series; // Modifier pour passer l'objet Series
+  final Series series;
+  final int rank; // Ajout pour gérer le rang de la série
 
-  SeriesWidget({required this.series});
+  const SeriesWidget({
+    super.key,
+    required this.series,
+    required this.rank,
+  });
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final imageWidth = screenWidth * 0.3;
-    final imageHeight = imageWidth * 1.5;
     final paddingSize = screenWidth * 0.02;
+    final imageWidth = screenWidth * 0.25; // Taille réajustée pour l'image
+    final imageHeight = imageWidth * 1.5; // Hauteur d'image plus grande pour un meilleur ratio
+    final cardHeight = screenWidth * 0.6 / 2; // Hauteur de la carte ajustée pour afficher 4 éléments
 
     return GestureDetector(
       onTap: () {
@@ -24,59 +31,80 @@ class SeriesWidget extends StatelessWidget {
         );
       },
       child: Container(
-        padding: EdgeInsets.all(paddingSize),
+        height: cardHeight,
+        margin: EdgeInsets.symmetric(horizontal: paddingSize, vertical: paddingSize / 2),
+        decoration: BoxDecoration(
+          color: AppColors.cardBackground,
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 3,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image de couverture
+            // Numéro de rang
             Container(
-              width: imageWidth,
-              height: imageHeight,
+              width: screenWidth * 0.08,
+              height: cardHeight,
               decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(series.imageUrl),
-                  fit: BoxFit.cover,
+                color: AppColors.orange,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8),
+                  bottomLeft: Radius.circular(8),
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  '#$rank',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
-            SizedBox(width: paddingSize),
+            // Image de la série
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.network(
+                series.imageUrl,
+                width: imageWidth,
+                height: imageHeight,
+                fit: BoxFit.cover,
+              ),
+            ),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Titre
-                  Text(
-                    series.title,
-                    style: TextStyle(
-                      fontSize: screenWidth * 0.04,
-                      fontWeight: FontWeight.bold,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: paddingSize),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      series.title,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                  SizedBox(height: paddingSize),
-
-                  // Date de sortie
-                  Row(
-                    children: [
-                      Icon(Icons.calendar_today, size: screenWidth * 0.02),
-                      SizedBox(width: paddingSize),
-                      Text(series.releaseDate),
-                    ],
-                  ),
-                  SizedBox(height: paddingSize),
-
-                  // Nombre d'épisodes
-                  Row(
-                    children: [
-                      Icon(Icons.format_list_numbered, size: screenWidth * 0.02),
-                      SizedBox(width: paddingSize),
-                      Text(series.numberOfEpisodes.toString()), // Assurez-vous que ce champ existe dans votre modèle
-                    ],
-                  ),
-                  SizedBox(height: paddingSize),
-
-                  // Autres informations sur la série
-                  // Ajoutez ici si nécessaire
-                ],
+                    Text(
+                      '${series.numberOfEpisodes} épisodes', // Remplacer par le nombre réel d'épisodes
+                      style: TextStyle(color: Colors.grey[400], fontSize: 14),
+                    ),
+                    Text(
+                      series.releaseDate, // Remplacer par la date de sortie réelle
+                      style: TextStyle(color: Colors.grey[400], fontSize: 14),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

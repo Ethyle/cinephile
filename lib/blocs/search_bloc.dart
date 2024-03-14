@@ -1,5 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import '../models/character_model.dart';
+import '../models/comics_model.dart';
+import '../models/movies_model.dart';
+import '../models/series_model.dart';
+import '../services/api_service.dart';
 
 // Événements
 abstract class SearchEvent extends Equatable {
@@ -9,7 +14,7 @@ abstract class SearchEvent extends Equatable {
 class PerformSearchEvent extends SearchEvent {
   final String query;
 
-  PerformSearchEvent(this.query);
+  const PerformSearchEvent(this.query);
 
   @override
   List<Object> get props => [query];
@@ -31,9 +36,9 @@ class SearchLoadingState extends SearchState {
 }
 
 class SearchResultsState extends SearchState {
-  final List<String> results;
+  final Map<String, List<String>> results; // Modifié pour stocker une carte des résultats
 
-  SearchResultsState(this.results);
+  const SearchResultsState(this.results);
 
   @override
   List<Object> get props => [results];
@@ -42,7 +47,7 @@ class SearchResultsState extends SearchState {
 class SearchErrorState extends SearchState {
   final String error;
 
-  SearchErrorState(this.error);
+  const SearchErrorState(this.error);
 
   @override
   List<Object> get props => [error];
@@ -50,20 +55,49 @@ class SearchErrorState extends SearchState {
 
 // Bloc
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
-  SearchBloc() : super(SearchInitialState()) {
+  final ApiService apiService;
+
+  SearchBloc(this.apiService) : super(SearchInitialState()) {
     on<PerformSearchEvent>(_onPerformSearchEvent);
   }
 
   Future<void> _onPerformSearchEvent(PerformSearchEvent event, Emitter<SearchState> emit) async {
-    emit(SearchLoadingState());
-    try {
-      // Simulez une recherche réussie avec des résultats fictifs
-      // Vous devrez remplacer ceci par votre logique de recherche réelle.
-      List<String> results = ['Result 1', 'Result 2', 'Result 3'];
-      emit(SearchResultsState(results));
-    } catch (e) {
-      // Gérez les erreurs de recherche
-      emit(SearchErrorState('Erreur lors de la recherche : $e'));
-    }
+  emit(SearchLoadingState());
+  try {
+    // Log avant les appels API
+    print('Début de la recherche pour : ${event.query}');
+
+    final comicsFuture = apiService.searchComics(event.query);
+    final moviesFuture = apiService.searchMovies(event.query);
+    final seriesFuture = apiService.searchSeries(event.query);
+    final charactersFuture = apiService.searchCharacters(event.query);
+
+    // Attendre les résultats de tous les appels API
+    final List<Comic> comics = await comicsFuture;
+    final List<Movie> movies = await moviesFuture;
+    final List<Series> series = await seriesFuture;
+    final List<Character> characters = await charactersFuture;
+
+    // Log après avoir obtenu les résultats
+    print('Comics trouvés: ${comics.length}');
+    print('Films trouvés: ${movies.length}');
+    print('Séries trouvées: ${series.length}');
+    print('Personnages trouvés: ${characters.length}');
+
+    // Construire les résultats de recherche
+    Map<String, List<String>> searchResults = {
+      'Comics': comics.map((comic) => comic.name).toList(),
+      'Movies': movies.map((movie) => movie.name).toList(),
+      'Series': series.map((serie) => serie.title).toList(),
+      'Characters': characters.map((character) => character.name).toList(),
+    };
+
+    emit(SearchResultsState(searchResults));
+  } catch (e) {
+    emit(SearchErrorState('Erreur lors de la recherche : $e'));
+    // Log de l'erreur
+    print('Erreur lors de la recherche : $e');
   }
+}
+
 }

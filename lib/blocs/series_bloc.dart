@@ -31,7 +31,7 @@ class SeriesLoadingState extends SeriesState {
 class SeriesLoadedState extends SeriesState {
   final List<Series> series;
   
-  SeriesLoadedState(this.series);
+  const SeriesLoadedState(this.series);
 
   @override
   List<Object> get props => [series];
@@ -40,7 +40,7 @@ class SeriesLoadedState extends SeriesState {
 class SeriesErrorState extends SeriesState {
   final String error;
 
-  SeriesErrorState(this.error);
+  const SeriesErrorState(this.error);
 
   @override
   List<Object> get props => [error];

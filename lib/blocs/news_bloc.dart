@@ -31,7 +31,7 @@ class NewsLoadingState extends NewsState {
 class NewsLoadedState extends NewsState {
   final List<News> newss;
   
-  NewsLoadedState(this.newss);
+  const NewsLoadedState(this.newss);
 
   @override
   List<Object> get props => [newss];
@@ -40,7 +40,7 @@ class NewsLoadedState extends NewsState {
 class NewsErrorState extends NewsState {
   final String error;
 
-  NewsErrorState(this.error);
+  const NewsErrorState(this.error);
 
   @override
   List<Object> get props => [error];
