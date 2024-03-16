@@ -4,7 +4,7 @@ class Episode {
   final String description;
   final String imageUrl;
   final String airDate;
-  final String episodeNumber; // Ajouté pour stocker le numéro de l'épisode
+  final String episodeNumber; 
 
   Episode({
     required this.seriesId,

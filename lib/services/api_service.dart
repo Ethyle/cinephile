@@ -141,11 +141,11 @@ try {
   Future<List<T>> _getApiData<T>(Uri url, Function fromJson) async {
     try {
       var response = await http.get(url);
-
-      if (response.statusCode == 200) {
+    
+      if (response.statusCode == 200 ) {
         var data = json.decode(response.body);
-
         List results = data['results'] as List;
+
         return results.map((json) => fromJson(json)).cast<T>().toList();
       } else {
         print("Erreur lors de l'appel API: Statut HTTP ${response.statusCode}");
@@ -158,7 +158,7 @@ try {
   }
 
 
-// Recherche des Comics
+// Recherche des Comic
 Future<List<Comic>> searchComics(String query) async {
   var encodedQuery = Uri.encodeComponent(query);
   var url = Uri.parse('https://comicvine.gamespot.com/api/search/?api_key=$apiKey&format=json&field_list=name,image&limit=10&resources=issue&query=$encodedQuery');

@@ -22,6 +22,7 @@ class Comic {
   });
 
   factory Comic.fromJson(Map<String, dynamic> json) {
+    print(json);
     return Comic(
       id: json['id'] ?? 0,
       name: json['name'] ?? 'Information inconnue',
