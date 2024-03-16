@@ -6,6 +6,9 @@ import '../../services/api_service.dart';
 // Événements
 abstract class CharacterEvent extends Equatable {
   const CharacterEvent();
+
+  @override
+  List<Object> get props => [];
 }
 
 class FetchCharactersEvent extends CharacterEvent {
@@ -13,24 +16,30 @@ class FetchCharactersEvent extends CharacterEvent {
   List<Object> get props => [];
 }
 
+class FetchCharactersByMovieIdEvent extends CharacterEvent {
+  final int movieId;
+
+  const FetchCharactersByMovieIdEvent(this.movieId);
+
+  @override
+  List<Object> get props => [movieId];
+}
+
 // États
 abstract class CharacterState extends Equatable {
   const CharacterState();
-}
 
-class CharacterInitialState extends CharacterState {
   @override
   List<Object> get props => [];
 }
 
-class CharacterLoadingState extends CharacterState {
-  @override
-  List<Object> get props => [];
-}
+class CharacterInitialState extends CharacterState {}
+
+class CharacterLoadingState extends CharacterState {}
 
 class CharacterLoadedState extends CharacterState {
   final List<Character> characters;
-  
+
   const CharacterLoadedState(this.characters);
 
   @override
@@ -60,5 +69,17 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
         emit(CharacterErrorState('Failed to fetch characters: $e'));
       }
     });
+
+    on<FetchCharactersByMovieIdEvent>((event, emit) async {
+      emit(CharacterLoadingState());
+      try {
+        final characters = await apiService.getCharactersByMoviesId(event.movieId);
+        emit(CharacterLoadedState(characters));
+      } catch (e) {
+        emit(CharacterErrorState('Failed to fetch characters for movie ${event.movieId}: $e'));
+      }
+    });
   }
 }
+
+

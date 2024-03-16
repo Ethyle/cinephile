@@ -13,7 +13,6 @@ class ApiService {
   var apiKey = dotenv.env['API_KEY'];
   var apiKey1 = dotenv.env['API_KEY1'];
 
-
   // Endpoint pour les comics
   Future<List<Comic>> getComics() async {
     var url = Uri.parse('https://comicvine.gamespot.com/api/issues?api_key=$apiKey&format=json');
@@ -61,6 +60,34 @@ class ApiService {
       throw Exception('Exception during API call: $e');
     }
   }
+
+  Future<List<Character>> getCharactersByMoviesId(int moviesId) async {
+    // Constructing the URL to query the API with the movie ID as a filter
+    var url = Uri.parse('https://comicvine.gamespot.com/api/character?api_key=$apiKey&format=json&filter=movies:$moviesId');
+
+    try {
+      var response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+
+        if (data['results'] is List) {
+          List<dynamic> charactersJson = data['results'];
+          List<Character> characters = charactersJson.map((charactersJson) => Character.fromJson(charactersJson)).toList();
+          return characters;
+        } else {
+          throw Exception('Expected a list of results but did not find one.');
+        }
+      } else {
+        // Handle other than status 200 OK responses
+        throw Exception('Error fetching characters: HTTP ${response.statusCode}');
+      }
+    } catch (e) {
+      // Handle exceptions during the API call
+      throw Exception('Exception during API call: $e');
+    }
+  }
+
   // Endpoint pour les personnages
 Future<List<Character>> getCharacters() async {
   var url = Uri.parse('https://comicvine.gamespot.com/api/characters?api_key=$apiKey&format=json');

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../models/news_model.dart';
+import '../ui/theme.dart';
 
 class NewsWidget extends StatelessWidget {
   final String imageUrl;
@@ -38,7 +40,7 @@ class NewsWidget extends StatelessWidget {
             title,
             style: TextStyle(
               fontSize: screenWidth * 0.04,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.bold, color : Colors.white
             ),
           ),
         ],

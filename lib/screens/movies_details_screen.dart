@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart'; 
 import '../models/movies_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../ui/theme.dart'; 
+import '../blocs/character_bloc.dart';
+import '../services/api_service.dart';
 
 class MoviesDetailsScreen extends StatefulWidget {
   final Movie movies;
@@ -154,23 +157,48 @@ class CharactersTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.seeMoreBackground, // Set the background color to black
-      child: ListView.builder(
-        itemCount: movie.characters.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            leading: Icon(Icons.person, color: Colors.white), // Placeholder for the character image
-            title: Text(
-              movie.characters[index],
-              style: TextStyle(color: Colors.white),
-            ),
-          );
+    ApiService apiService = ApiService(); // Ensure this instance is correctly instantiated.
+
+    return BlocProvider<CharacterBloc>(
+      create: (context) => CharacterBloc(apiService)..add(FetchCharactersByMovieIdEvent(movie.id)),
+      child: BlocBuilder<CharacterBloc, CharacterState>(
+        builder: (context, state) {
+          if (state is CharacterLoadingState) {
+            return Center(child: CircularProgressIndicator(color: Colors.white));
+          } else if (state is CharacterLoadedState) {
+            return Container(
+              color: AppColors.seeMoreBackground, // Set the background color to black
+              child: ListView.builder(
+                itemCount: state.characters.length,
+                itemBuilder: (context, index) {
+                  final character = state.characters[index];
+                  return Card(
+                    color: AppColors.cardBackground, // Set the card color to blue
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: NetworkImage(character.imageUrl),
+                        backgroundColor: Colors.transparent,
+                      ),
+                      title: Text(character.name, style: TextStyle(color: Colors.white)),
+                    ),
+                  );
+                },
+              ),
+            );
+          } else if (state is CharacterErrorState) {
+            return Center(child: Text('Error: ${state.error}', style: TextStyle(color: Colors.white)));
+          } else {
+            return Center(child: Text('Start searching for characters', style: TextStyle(color: Colors.white)));
+          }
         },
       ),
     );
   }
 }
+
+
+
+
 
 class InfosTab extends StatelessWidget {
   final Movie movie;
@@ -183,16 +211,14 @@ class InfosTab extends StatelessWidget {
       color: AppColors.seeMoreBackground, // Set the background color to black
       child: ListView(
         children: [
-          _buildInfoItem('Duration', movie.duration),
+          _buildInfoItem('Duration', movie.duration.toString()),
           _buildInfoItem('Release Date', movie.releaseDate),
-          _buildInfoItem('Classification', movie.classification),
-          _buildInfoItem('Directors', movie.directors.join(', ')),
-          _buildInfoItem('Screenwriters', movie.screenwriters.join(', ')),
-          _buildInfoItem('Producers', movie.producers.join(', ')),
-          _buildInfoItem('Studio', movie.studio),
-          _buildInfoItem('Budget', movie.budget),
-          _buildInfoItem('Box Office Revenue', movie.boxOfficeRevenue),
-          _buildInfoItem('Total Revenue', movie.totalRevenue),
+          _buildInfoItem('Budget', movie.budget.toString()),
+          _buildInfoItem('Box Office Revenue', movie.boxOfficeRevenue.toString()),
+          _buildInfoItem('Total Revenue', movie.totalRevenue.toString()),
+          _buildInfoItem('Producers', _formatListToString(movie.producers)),
+          _buildInfoItem('Writers', _formatListToString(movie.writers)),
+          _buildInfoItem('Studios', _formatListToString(movie.studios)),
         ],
       ),
     );
@@ -203,6 +229,10 @@ class InfosTab extends StatelessWidget {
       title: Text(title, style: TextStyle(color: Colors.white)),
       subtitle: Text(value, style: TextStyle(color: Colors.grey)),
     );
+  }
+
+    String _formatListToString(List<String> list) {
+    return list.join(', ');
   }
 }
 

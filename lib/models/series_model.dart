@@ -4,9 +4,9 @@ class Series {
   final String imageUrl;
   final String title;
   final int numberOfEpisodes;
-  final String releaseDate;
-  final String characterCredits; // Supposed to be a List of character identifiers
-  final String apiDetailUrl; // API detail URL for the series
+  final String releaseDate; // 'start_year' semble être l'année de début, donc il pourrait être traité différemment.
+  // Suppression de characterCredits car il n'est pas présent dans le JSON fourni.
+  final String apiDetailUrl;
 
   Series({
     required this.id,
@@ -15,19 +15,17 @@ class Series {
     required this.title,
     required this.numberOfEpisodes,
     this.releaseDate = 'Information inconnue',
-    this.characterCredits = 'Information inconnue',
-    this.apiDetailUrl = '',
+    required this.apiDetailUrl,
   });
 
   factory Series.fromJson(Map<String, dynamic> json) {
     return Series(
-      id: json['id'] ?? 0, // Assuming 'id' is a top-level field in the JSON
+      id: json['id'] ?? 0,
       synopsis: json['description'] ?? 'Information inconnue',
-      imageUrl: json['image']?['medium_url'] ?? 'information inconnue',
+      imageUrl: json['image']['medium_url'] ?? 'information inconnue', // Assumant que 'medium_url' est approprié ici.
       title: json['name'] ?? 'Information inconnue',
       numberOfEpisodes: json['count_of_episodes'] ?? 0,
-      releaseDate: json['start_year'] ?? 'Information inconnue',
-      characterCredits: json['character_credits'] ?? 'Information Inconnue',
+      releaseDate: json['start_year']?.toString() ?? 'Information inconnue', // Converti 'start_year' en String si nécessaire.
       apiDetailUrl: json['api_detail_url'] ?? '',
     );
   }

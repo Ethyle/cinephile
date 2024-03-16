@@ -1,75 +1,37 @@
-class CharacterCredit {
-  final String name;
-  final String role;
-  final String imageUrl;
-
-  CharacterCredit({
-    required this.name,
-    required this.role,
-    required this.imageUrl,
-  });
-}
-
-class PersonCredit {
-  final String name;
-  final String role;
-  final String imageUrl;
-
-  PersonCredit({
-    required this.name,
-    required this.role,
-    required this.imageUrl,
-  });
-}
-
 class Comic {
+  final int id;
   final String name;
   final String imageUrl;
   final String description;
   final String releaseDate;
   final String numberOfVolume;
-  final List<CharacterCredit> characterCredits;
-  final List<PersonCredit> personCredits;
+  final String apiDetailUrl;
+  final String volumeName;
+  final int volumeId;
 
   Comic({
+    required this.id,
     required this.name,
     required this.imageUrl,
     this.description = 'Information inconnue',
-    this.releaseDate = 'Information inconnue',
-    this.numberOfVolume = 'Information inconnue',
-    required this.characterCredits,
-    required this.personCredits,
+    required this.releaseDate,
+    required this.numberOfVolume,
+    required this.apiDetailUrl,
+    required this.volumeName,
+    required this.volumeId,
   });
 
   factory Comic.fromJson(Map<String, dynamic> json) {
-    // Assuming 'character_credits' and 'person_credits' are lists of maps
-    List<CharacterCredit> parsedCharacterCredits = (json['character_credits'] as List).map((characterJson) {
-      // Assuming 'characterJson' is a Map with 'name', 'role', and 'image' keys
-      return CharacterCredit(
-        name: characterJson['name']?? 'Information inconnue',
-        role: characterJson['role']?? 'Information inconnue',
-        imageUrl: characterJson['image']['icon_url']?? 'Information inconnue',
-      );
-    }).toList();
-
-    List<PersonCredit> parsedPersonCredits = (json['person_credits'] as List).map((personJson) {
-      // Assuming 'personJson' is a Map with 'name', 'role', and 'image' keys
-      return PersonCredit(
-        name: personJson['name']?? 'Information inconnue',
-        role: personJson['role']?? 'Information inconnue',
-        imageUrl: personJson['image']['icon_url']?? 'Information inconnue',
-      );
-    }).toList();
-
     return Comic(
+      id: json['id'] ?? 0,
       name: json['name'] ?? 'Information inconnue',
       imageUrl: json['image']['medium_url'] ?? 'Information inconnue',
       description: json['description'] ?? 'Information inconnue',
       releaseDate: json['cover_date'] ?? 'Information inconnue',
       numberOfVolume: json['issue_number'] ?? 'Information inconnue',
-      characterCredits: parsedCharacterCredits?? [],
-      personCredits: parsedPersonCredits ?? [],
+      apiDetailUrl: json['api_detail_url'] ?? '',
+      volumeName: json['volume']['name'] ?? 'Volume inconnu',
+      volumeId: json['volume']['id'] ?? 0,
     );
   }
 }
-

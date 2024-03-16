@@ -157,14 +157,10 @@ class CharactersTab extends StatelessWidget {
     return Container(
       color: AppColors.seeMoreBackground, // Ensure this is defined in your theme
       child: ListView.builder(
-        itemCount: comics.characterCredits.length,
+        itemCount: comics.name.length,
         itemBuilder: (context, index) {
-          final character = comics.characterCredits[index];
-          return ListTile(
-            leading: Image.network(character.imageUrl, width: 50, height: 50, fit: BoxFit.cover),
-            title: Text(character.name, style: TextStyle(color: Colors.white)),
-            subtitle: Text(character.role, style: TextStyle(color: Colors.white70)),
-          );
+          final character = comics.name[index];
+        
         },
       ),
     );
@@ -181,20 +177,14 @@ class AuthorsTab extends StatelessWidget {
     return Container(
       color: AppColors.seeMoreBackground, // Ensure this is defined in your theme
       child: ListView.builder(
-        itemCount: comics.personCredits.length,
+        itemCount: comics.name.length,
         itemBuilder: (context, index) {
-          final person = comics.personCredits[index];
-          return ListTile(
-            leading: Image.network(person.imageUrl, width: 50, height: 50, fit: BoxFit.cover),
-            title: Text(person.name, style: TextStyle(color: Colors.white)),
-            subtitle: Text(person.role, style: TextStyle(color: Colors.white70)),
-          );
+          final person = comics.name[index];
         },
       ),
     );
   }
 }
-
 
 
 Widget _buildCardItem({

@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: AppColors.backgroundColor, // Arrière-plan de couleur uniforme
             body: ListView(
               children: <Widget>[
-               // _buildSectionContainer('Actualités', _buildNewsSection()),
+                _buildSectionContainer('Actualités', _buildNewsSection()),
                 _buildSectionContainer('Comics populaires', _buildComicsSection()),
                 _buildSectionContainer('Séries populaires', _buildSeriesSection()),
                 _buildSectionContainer('Films populaires', _buildMoviesSection()),

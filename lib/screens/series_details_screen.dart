@@ -3,8 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart'; 
 import '../models/series_model.dart';
 import '../models/episode_model.dart'; 
-import '';
 import '../ui/theme.dart'; 
+import '../blocs/episodes_bloc.dart'; 
+
 
 class SeriesDetailsScreen extends StatefulWidget {
   final Series series;
@@ -161,10 +162,7 @@ class CharactersTab extends StatelessWidget {
       color: AppColors.seeMoreBackground, // Set the background color to black
      child: SingleChildScrollView(
         padding: const EdgeInsets.all(8.0),
-        child: HtmlWidget(
-          series.characterCredits,
-          textStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white),
-        ),
+    
       ),
     );
   }
@@ -177,23 +175,46 @@ class EpisodesTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Episode> episodes = []; // Placeholder for your episodes list
+    // Demander à EpisodeBloc de charger les épisodes pour la série actuelle
+    context.read<EpisodeBloc>().add(FetchEpisodesBySeriesIdEvent(series.id));
 
     return Container(
-      color: AppColors.seeMoreBackground, // Set the background color to black
-      child: ListView.builder(
-        itemCount: episodes.length,
-        itemBuilder: (context, index) {
-          return _buildCardItem(
-            imageUrl: episodes[index].imageUrl,
-            title: episodes[index].name,
-            subtitle: episodes[index].airDate,
-            context: context,
-          );
+      color: AppColors.seeMoreBackground, // Utiliser la couleur de fond définie dans votre thème
+      child: BlocBuilder<EpisodeBloc, EpisodeState>(
+        builder: (context, state) {
+          if (state is EpisodeLoadingState) {
+            return const CircularProgressIndicator();
+          } else if (state is EpisodeLoadedState) {
+            // Construction de la liste des épisodes
+           return ListView.builder(
+              itemCount: state.episodes.length,
+              itemBuilder: (context, index) {
+                return _buildEpisodeCard(state.episodes[index], index);
+              },
+            );
+          } else if (state is EpisodeErrorState) {
+            return Center(child: Text(state.error));
+          }
+          return const SizedBox(); // Pour EpisodeInitialState ou un état inattendu
         },
       ),
     );
   }
+
+Widget _buildEpisodeCard(Episode episode, int index) {
+  // Convertir l'index en un numéro d'épisode séquentiel (en commençant par 01, 02, etc.)
+  String episodeNumber = (index + 1).toString().padLeft(2, '0');
+
+  return Card(
+    color: AppColors.cardBackground,
+    child: ListTile(
+      leading: Image.network(episode.imageUrl, fit: BoxFit.cover, width: 50),
+      title: Text(episode.name, style: TextStyle(color: Colors.white)),
+      subtitle: Text('Episode #$episodeNumber - ${episode.airDate}', style: TextStyle(color: Colors.white70)),
+    ),
+  );
+}
+
 }
 
 Widget _buildCardItem({
@@ -211,4 +232,5 @@ Widget _buildCardItem({
     ),
   );
 }
+
 

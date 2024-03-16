@@ -4,6 +4,8 @@ import 'package:cinephile/blocs/comics_bloc.dart';
 import 'package:cinephile/blocs/movies_bloc.dart';
 import 'package:cinephile/blocs/series_bloc.dart';
 import 'package:cinephile/blocs/character_bloc.dart';
+import 'package:cinephile/blocs/episodes_bloc.dart';
+import 'package:cinephile/blocs/news_bloc.dart';
 
 import 'package:cinephile/services/api_service.dart';
 import 'package:cinephile/screens/home_screen.dart';
@@ -39,6 +41,12 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<CharacterBloc>(
           create: (context) => CharacterBloc(apiService),
+        ),
+         BlocProvider<EpisodeBloc>(
+      create: (context) => EpisodeBloc(apiService: apiService),
+    ),
+     BlocProvider<NewsBloc>(
+          create: (context) => NewsBloc(apiService),
         ),
       ],
       child: MaterialApp(

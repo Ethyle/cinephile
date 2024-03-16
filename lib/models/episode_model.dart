@@ -1,25 +1,28 @@
 class Episode {
-  final String series;
+  final int seriesId; // Changé en String pour correspondre aux données JSON
   final String name;
   final String description;
   final String imageUrl;
   final String airDate;
+  final String episodeNumber; // Ajouté pour stocker le numéro de l'épisode
 
   Episode({
-    required this.series,
+    required this.seriesId,
     required this.name,
     this.description = 'Information inconnue',
     required this.imageUrl,
     required this.airDate,
+    required this.episodeNumber,
   });
 
   factory Episode.fromJson(Map<String, dynamic> json) {
     return Episode(
-      series: json['series'] ?? '',
+      seriesId: json['id'], 
       name: json['name'] ?? 'Épisode inconnu',
       description: json['description'] ?? 'Information inconnue',
-      imageUrl: json['image'] ?? 'default_image_url', // Remplacez 'default_image_url' par une URL d'image par défaut
-      airDate: json['air_date'] ?? 'inconnue', // Utilisez une date par défaut si 'air_date' est null
+      imageUrl: json['image']['icon_url'] ?? 'default_image_url', 
+      airDate: json['air_date'] ?? 'Date inconnue',
+      episodeNumber: json['episode_number'], // Aucune valeur par défaut n'est fournie; cela devrait être géré si nécessaire
     );
   }
 }
