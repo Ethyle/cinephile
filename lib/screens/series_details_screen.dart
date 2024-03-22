@@ -1,3 +1,5 @@
+import 'package:cinephile/blocs/character_bloc.dart';
+import 'package:cinephile/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart'; 
@@ -102,7 +104,7 @@ class _SeriesDetailsScreenState extends State<SeriesDetailsScreen> with SingleTi
                       controller: _tabController,
                       children: [
                         HistoryTab(series: widget.series),
-                        CharactersTab(series: widget.series),
+                        CharactersTab(serie: widget.series),
                         EpisodesTab(series: widget.series),
                       ],
                     ),
@@ -152,17 +154,42 @@ class HistoryTab extends StatelessWidget {
 }
 
 class CharactersTab extends StatelessWidget {
-  final Series series;
+  final Series serie;
 
-  const CharactersTab({Key? key, required this.series}) : super(key: key);
+  const CharactersTab({Key? key, required this.serie}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.seeMoreBackground, // Set the background color to black
-     child: SingleChildScrollView(
-        padding: const EdgeInsets.all(8.0),
-    
+    ApiService apiService = ApiService(); // Ensure this instance is correctly instantiated.
+
+    return BlocProvider<CharacterBloc>(
+      create: (context) => CharacterBloc(apiService)..add(FetchCharactersBySerieIdEvent(serie.id)),
+      child: BlocBuilder<CharacterBloc, CharacterState>(
+        builder: (context, state) {
+          if (state is CharacterLoadingState) {
+            return Center(child: CircularProgressIndicator(color: Colors.white));
+          } else if (state is CharacterLoadedState) {
+            return Container(
+              color: AppColors.seeMoreBackground, // Set the background color to black
+              child: ListView.builder(
+                itemCount: state.characters.length,
+                itemBuilder: (context, index) {
+                  final character = state.characters[index];
+                  return Card(
+                    color: AppColors.cardBackground, // Set the card color to blue
+                    child: ListTile(
+                      title: Text(character.name, style: TextStyle(color: Colors.white)),
+                    ),
+                  );
+                },
+              ),
+            );
+          } else if (state is CharacterErrorState) {
+            return Center(child: Text('Error: ${state.error}', style: TextStyle(color: Colors.white)));
+          } else {
+            return Center(child: Text('Start searching for characters', style: TextStyle(color: Colors.white)));
+          }
+        },
       ),
     );
   }

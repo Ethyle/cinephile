@@ -61,32 +61,82 @@ class ApiService {
     }
   }
 
-  Future<List<Character>> getCharactersByMoviesId(int moviesId) async {
-    // Constructing the URL to query the API with the movie ID as a filter
-    var url = Uri.parse('https://comicvine.gamespot.com/api/character?api_key=$apiKey&format=json&filter=movies:$moviesId');
+ Future<List<Character>> getCharactersByMoviesId(int moviesId) async {
+  // Construction de l'URL pour interroger l'API avec l'ID du film en tant que filtre
+  var url = Uri.parse('https://comicvine.gamespot.com/api/movie/4025-$moviesId/?api_key=$apiKey&format=json');
 
-    try {
-      var response = await http.get(url);
+  try {
+    var response = await http.get(url);
 
-      if (response.statusCode == 200) {
-        var data = json.decode(response.body);
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      
+      // Assurez-vous d'accéder correctement à la liste des personnages dans la structure JSON
+      var charactersData = data['results']['characters'] as List<dynamic>;
 
-        if (data['results'] is List) {
-          List<dynamic> charactersJson = data['results'];
-          List<Character> characters = charactersJson.map((charactersJson) => Character.fromJson(charactersJson)).toList();
-          return characters;
-        } else {
-          throw Exception('Expected a list of results but did not find one.');
-        }
-      } else {
-        // Handle other than status 200 OK responses
-        throw Exception('Error fetching characters: HTTP ${response.statusCode}');
-      }
-    } catch (e) {
-      // Handle exceptions during the API call
-      throw Exception('Exception during API call: $e');
+      List<Character> characters = charactersData.map((characterJson) => Character.fromJson(characterJson)).toList();
+      return characters;
+    } else {
+      // Gère les réponses autres que le statut 200 OK
+      throw Exception('Error fetching characters: HTTP ${response.statusCode}');
     }
+  } catch (e) {
+    // Gère les exceptions lors de l'appel API
+    throw Exception('Exception during API call: $e');
   }
+}
+
+ Future<List<Character>> getCharactersByComicId(int comicId) async {
+  // Construction de l'URL pour interroger l'API avec l'ID du film en tant que filtre
+  var url = Uri.parse('https://comicvine.gamespot.com/api/issue/4000-$comicId/?api_key=$apiKey&format=json');
+
+  try {
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      
+      // Assurez-vous d'accéder correctement à la liste des personnages dans la structure JSON
+      var charactersData = data['results']['characters'] as List<dynamic>;
+
+      List<Character> characters = charactersData.map((characterJson) => Character.fromJson(characterJson)).toList();
+
+      return characters;
+    } else {
+      // Gère les réponses autres que le statut 200 OK
+      throw Exception('Error fetching characters: HTTP ${response.statusCode}');
+    }
+  } catch (e) {
+    // Gère les exceptions lors de l'appel API
+    throw Exception('Exception during API call: $e');
+  }
+}
+
+ Future<List<Character>> getCharactersBySerieId(int serieId) async {
+  // Construction de l'URL pour interroger l'API avec l'ID du film en tant que filtre
+  var url = Uri.parse('https://comicvine.gamespot.com/api/series/$serieId/?api_key=$apiKey&format=json');
+
+  try {
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      
+      // Assurez-vous d'accéder correctement à la liste des personnages dans la structure JSON
+      var charactersData = data['results']['characters'] as List<dynamic>;
+
+      List<Character> characters = charactersData.map((characterJson) => Character.fromJson(characterJson)).toList();
+      return characters;
+    } else {
+      // Gère les réponses autres que le statut 200 OK
+      throw Exception('Error fetching characters: HTTP ${response.statusCode}');
+    }
+  } catch (e) {
+    // Gère les exceptions lors de l'appel API
+    throw Exception('Exception during API call: $e');
+  }
+}
+
 
   // Endpoint pour les personnages
 Future<List<Character>> getCharacters() async {
@@ -136,7 +186,23 @@ try {
   }
 }
 
-
+ // Fonction pour récupérer les auteurs d'un comic par son ID
+   Future<List<String>> getAuthorsByComicId(int comicId) async {
+    var url = Uri.parse('https://comicvine.gamespot.com/api/issue/4000-$comicId/?api_key=$apiKey&format=json&field_list=person_credits');
+    var response = await http.get(url);
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      if (data['results'] != null && data['results']['person_credits'] != null) {
+        var personCredits = List.from(data['results']['person_credits']);
+        return personCredits.map((person) => person['name'].toString()).toList();
+      } else {
+        throw Exception('No person_credits found for comic with id $comicId');
+      }
+    } else {
+      throw Exception('Failed to load authors for comic with id $comicId: ${response.statusCode}');
+    }
+  }
+  
   // Fonction générique pour obtenir des données de l'API
   Future<List<T>> _getApiData<T>(Uri url, Function fromJson) async {
     try {

@@ -175,10 +175,6 @@ class CharactersTab extends StatelessWidget {
                   return Card(
                     color: AppColors.cardBackground, // Set the card color to blue
                     child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(character.imageUrl),
-                        backgroundColor: Colors.transparent,
-                      ),
                       title: Text(character.name, style: TextStyle(color: Colors.white)),
                     ),
                   );

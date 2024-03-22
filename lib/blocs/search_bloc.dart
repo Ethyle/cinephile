@@ -69,28 +69,28 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     print('Début de la recherche pour : ${event.query}');
 
     final comicsFuture = apiService.searchComics(event.query);
-    // final moviesFuture = apiService.searchMovies(event.query);
-    // final seriesFuture = apiService.searchSeries(event.query);
-    // final charactersFuture = apiService.searchCharacters(event.query);
+     final moviesFuture = apiService.searchMovies(event.query);
+     final seriesFuture = apiService.searchSeries(event.query);
+     final charactersFuture = apiService.searchCharacters(event.query);
 
     // Attendre les résultats de tous les appels API
     final List<Comic> comics = await comicsFuture;
-   // final List<Movie> movies = await moviesFuture;
-   // final List<Series> series = await seriesFuture;
-   // final List<Character> characters = await charactersFuture;
+    final List<Movie> movies = await moviesFuture;
+    final List<Series> series = await seriesFuture;
+    final List<Character> characters = await charactersFuture;
 
     // Log après avoir obtenu les résultats
     print('Comics trouvés: ${comics.length}');
-   // print('Films trouvés: ${movies.length}');
-   // print('Séries trouvées: ${series.length}');
-   // print('Personnages trouvés: ${characters.length}');
+    print('Films trouvés: ${movies.length}');
+    print('Séries trouvées: ${series.length}');
+    print('Personnages trouvés: ${characters.length}');
 
     // Construire les résultats de recherche
     Map<String, List<Map<String, String>>> searchResults = {
   'Comics': comics.map((comic) => {'name': comic.name, 'imageUrl': comic.imageUrl}).toList(),
-  // 'Movies': movies.map((movie) => {'name': movie.name, 'imageUrl': movie.imageUrl}).toList(),
-  // 'Series': series.map((serie) => {'name': serie.title, 'imageUrl': serie.imageUrl}).toList(),
-  // 'Characters': characters.map((character) => {'name': character.name, 'imageUrl': character.imageUrl}).toList(),
+   'Movies': movies.map((movie) => {'name': movie.name, 'imageUrl': movie.imageUrl}).toList(),
+   'Series': series.map((serie) => {'name': serie.title, 'imageUrl': serie.imageUrl}).toList(),
+   'Characters': characters.map((character) => {'name': character.name}).toList(),
 };
 
 

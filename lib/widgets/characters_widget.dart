@@ -33,7 +33,7 @@ class CharacterWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                  image: NetworkImage(character.imageUrl),  // Utiliser character.imageUrl
+                  image: NetworkImage(character.imageUrl ?? 'information nulle'),  // Utiliser character.imageUrl
                   fit: BoxFit.cover,
                 ),
               ),

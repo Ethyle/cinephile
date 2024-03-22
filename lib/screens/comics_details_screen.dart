@@ -1,4 +1,8 @@
+import 'package:cinephile/blocs/character_bloc.dart';
+import 'package:cinephile/blocs/comics_bloc.dart';
+import 'package:cinephile/services/api_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart'; 
 import '../models/comics_model.dart';
 import '../ui/theme.dart'; 
@@ -98,8 +102,8 @@ class _ComicsDetailsScreenState extends State<ComicsDetailsScreen> with SingleTi
                       controller: _tabController,
                       children: [
                         HistoryTab(comics: widget.comics),
-                        CharactersTab(comics: widget.comics),
-                        AuthorsTab(comics: widget.comics),
+                        CharactersTab(comic: widget.comics),
+                        AuthorsTab(comic: widget.comics),
                       ],
                     ),
                   ),
@@ -148,19 +152,41 @@ class HistoryTab extends StatelessWidget {
 }
 
 class CharactersTab extends StatelessWidget {
-  final Comic comics;
+  final Comic comic;
 
-  const CharactersTab({Key? key, required this.comics}) : super(key: key);
+  const CharactersTab({Key? key, required this.comic}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.seeMoreBackground, // Ensure this is defined in your theme
-      child: ListView.builder(
-        itemCount: comics.name.length,
-        itemBuilder: (context, index) {
-          final character = comics.name[index];
-        
+    ApiService apiService = ApiService(); // Ensure this instance is correctly instantiated.
+
+    return BlocProvider<CharacterBloc>(
+      create: (context) => CharacterBloc(apiService)..add(FetchCharactersByComicIdEvent(comic.id)),
+      child: BlocBuilder<CharacterBloc, CharacterState>(
+        builder: (context, state) {
+          if (state is CharacterLoadingState) {
+            return Center(child: CircularProgressIndicator(color: Colors.white));
+          } else if (state is CharacterLoadedState) {
+            return Container(
+              color: AppColors.seeMoreBackground, // Set the background color to black
+              child: ListView.builder(
+                itemCount: state.characters.length,
+                itemBuilder: (context, index) {
+                  final character = state.characters[index];
+                  return Card(
+                    color: AppColors.cardBackground, // Set the card color to blue
+                    child: ListTile(
+                      title: Text(character.name, style: TextStyle(color: Colors.white)),
+                    ),
+                  );
+                },
+              ),
+            );
+          } else if (state is CharacterErrorState) {
+            return Center(child: Text('Error: ${state.error}', style: TextStyle(color: Colors.white)));
+          } else {
+            return Center(child: Text('Start searching for characters', style: TextStyle(color: Colors.white)));
+          }
         },
       ),
     );
@@ -168,23 +194,49 @@ class CharactersTab extends StatelessWidget {
 }
 
 class AuthorsTab extends StatelessWidget {
-  final Comic comics;
+  final Comic comic;
 
-  const AuthorsTab({Key? key, required this.comics}) : super(key: key);
+  const AuthorsTab({Key? key, required this.comic}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.seeMoreBackground, // Ensure this is defined in your theme
-      child: ListView.builder(
-        itemCount: comics.name.length,
-        itemBuilder: (context, index) {
-          final person = comics.name[index];
-        },
-      ),
+    // Demandez au Bloc de charger les auteurs lorsque l'onglet est construit
+    BlocProvider.of<ComicsBloc>(context).add(FetchComicAuthorsEvent(comic.id));
+
+    return BlocBuilder<ComicsBloc, ComicsState>(
+      builder: (context, state) {
+        if (state is AuthorsLoadingState) {
+          return Center(child: CircularProgressIndicator(color: Colors.white));
+        } else if (state is AuthorsLoadedState) {
+          // Affiche la liste des auteurs
+          return Container(
+            color: AppColors.seeMoreBackground, // Assurez-vous que cette couleur est définie dans votre thème
+            child: ListView.builder(
+              itemCount: state.authors.length,
+              itemBuilder: (context, index) {
+                final author = state.authors[index];
+                return Card(
+                  color: AppColors.cardBackground, // Set the card color to blue
+                  child: ListTile(
+                    title: Text(author, style: TextStyle(color: Colors.white)),
+                  ),
+                );
+              },
+            ),
+          );
+        } else if (state is AuthorsErrorState) {
+          // Affiche une erreur si le chargement a échoué
+          return Center(child: Text('Error: ${state.error}', style: TextStyle(color: Colors.white)));
+        } else {
+          // État par défaut, par exemple si les auteurs n'ont pas encore été chargés ou s'il n'y a pas d'auteurs.
+          return Center(child: Text('Aucun auteur trouvé', style: TextStyle(color: Colors.white)));
+        }
+      },
     );
   }
 }
+
+
 
 
 Widget _buildCardItem({

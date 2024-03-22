@@ -25,6 +25,24 @@ class FetchCharactersByMovieIdEvent extends CharacterEvent {
   List<Object> get props => [movieId];
 }
 
+class FetchCharactersByComicIdEvent extends CharacterEvent {
+  final int comicId;
+
+  const FetchCharactersByComicIdEvent(this.comicId);
+
+  @override
+  List<Object> get props => [comicId];
+}
+
+class FetchCharactersBySerieIdEvent extends CharacterEvent {
+  final int serieId;
+
+  const FetchCharactersBySerieIdEvent(this.serieId);
+
+  @override
+  List<Object> get props => [serieId];
+}
+
 // États
 abstract class CharacterState extends Equatable {
   const CharacterState();
@@ -77,6 +95,25 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
         emit(CharacterLoadedState(characters));
       } catch (e) {
         emit(CharacterErrorState('Failed to fetch characters for movie ${event.movieId}: $e'));
+      }
+    });
+
+        on<FetchCharactersByComicIdEvent>((event, emit) async {
+      emit(CharacterLoadingState());
+      try {
+        final characters = await apiService.getCharactersByMoviesId(event.comicId);
+        emit(CharacterLoadedState(characters));
+      } catch (e) {
+        emit(CharacterErrorState('Failed to fetch characters for movie ${event.comicId}: $e'));
+      }
+    });
+        on<FetchCharactersBySerieIdEvent>((event, emit) async {
+      emit(CharacterLoadingState());
+      try {
+        final characters = await apiService.getCharactersBySerieId(event.serieId);
+        emit(CharacterLoadedState(characters));
+      } catch (e) {
+        emit(CharacterErrorState('Failed to fetch characters for movie ${event.serieId}: $e'));
       }
     });
   }

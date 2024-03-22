@@ -6,8 +6,7 @@ class Comic {
   final String releaseDate;
   final String numberOfVolume;
   final String apiDetailUrl;
-  final String volumeName;
-  final int volumeId;
+  List<String> credits;
 
   Comic({
     required this.id,
@@ -17,8 +16,7 @@ class Comic {
     required this.releaseDate,
     required this.numberOfVolume,
     required this.apiDetailUrl,
-    required this.volumeName,
-    required this.volumeId,
+    required this.credits,
   });
 
   factory Comic.fromJson(Map<String, dynamic> json) {
@@ -31,8 +29,8 @@ class Comic {
       releaseDate: json['cover_date'] ?? 'Information inconnue',
       numberOfVolume: json['issue_number'] ?? 'Information inconnue',
       apiDetailUrl: json['api_detail_url'] ?? '',
-      volumeName: json['volume']['name'] ?? 'Volume inconnu',
-      volumeId: json['volume']['id'] ?? 0,
+      credits: json['person_credits'] != null ? List.from(json['person_credits'].map((credits) => credits['name'])) : [],
+
     );
   }
 }

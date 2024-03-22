@@ -17,7 +17,7 @@ class CharacterDetailsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Image.network(character.imageUrl, fit: BoxFit.cover), // Affiche l'image du personnage
+            Image.network(character.imageUrl ?? 'information nulle', fit: BoxFit.cover), // Affiche l'image du personnage
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
