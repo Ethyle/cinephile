@@ -15,7 +15,7 @@ class MoviesListScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Films les plus populaires',
           style: TextStyle(color: Colors.white)),
-        backgroundColor: AppColors.seeMoreBackground, // Utiliser la couleur définie dans theme.dart
+        backgroundColor: AppColors.seeMoreBackground, 
       ),
       body: BlocBuilder<MoviesBloc, MoviesState>(
         builder: (context, state) {
@@ -24,7 +24,7 @@ class MoviesListScreen extends StatelessWidget {
           } else if (state is MoviesLoadedState) {
             return ListView.separated(
               itemCount: state.movies.length,
-              separatorBuilder: (context, index) => Divider(color: AppColors.seeMoreBackground), // Diviseur personnalisé
+              separatorBuilder: (context, index) => Divider(color: AppColors.seeMoreBackground), 
               itemBuilder: (context, index) {
                 final movie = state.movies[index];
                 return MoviesWidget(
@@ -42,7 +42,7 @@ class MoviesListScreen extends StatelessWidget {
           }
         },
       ),
-      backgroundColor: AppColors.seeMoreBackground, // Mettez la couleur de fond ici
+      backgroundColor: AppColors.seeMoreBackground, 
     );
   }
 }

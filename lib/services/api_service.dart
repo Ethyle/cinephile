@@ -43,7 +43,6 @@ class ApiService {
       if (response.statusCode == 200) {
         var data = json.decode(response.body);
 
-        // Check if 'results' is a list and if so, transform each element into an Episode object
         if (data['results'] is List) {
           List<dynamic> episodesJson = data['results'];
           List<Episode> episodes = episodesJson.map((episodeJson) => Episode.fromJson(episodeJson)).toList();
@@ -52,11 +51,9 @@ class ApiService {
           throw Exception('Expected a list of results but did not find one.');
         }
       } else {
-        // Handle other than status 200 OK responses
         throw Exception('Error fetching episodes: HTTP ${response.statusCode}');
       }
     } catch (e) {
-      // Handle exceptions during the API call
       throw Exception('Exception during API call: $e');
     }
   }
@@ -96,7 +93,6 @@ class ApiService {
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       
-      // Assurez-vous d'accéder correctement à la liste des personnages dans la structure JSON
       var charactersData = data['results']['characters'] as List<dynamic>;
 
       List<Character> characters = charactersData.map((characterJson) => Character.fromJson(characterJson)).toList();
@@ -122,7 +118,6 @@ class ApiService {
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       
-      // Assurez-vous d'accéder correctement à la liste des personnages dans la structure JSON
       var charactersData = data['results']['characters'] as List<dynamic>;
 
       List<Character> characters = charactersData.map((characterJson) => Character.fromJson(characterJson)).toList();

@@ -139,7 +139,7 @@ class HistoryTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.seeMoreBackground, // Set the background color to black
+      color: AppColors.seeMoreBackground, 
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(8.0),
         child: HtmlWidget(
@@ -158,7 +158,7 @@ class CharactersTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ApiService apiService = ApiService(); // Ensure this instance is correctly instantiated.
+    ApiService apiService = ApiService(); 
 
     return BlocProvider<CharacterBloc>(
       create: (context) => CharacterBloc(apiService)..add(FetchCharactersByComicIdEvent(comic.id)),
@@ -168,13 +168,13 @@ class CharactersTab extends StatelessWidget {
             return Center(child: CircularProgressIndicator(color: Colors.white));
           } else if (state is CharacterLoadedState) {
             return Container(
-              color: AppColors.seeMoreBackground, // Set the background color to black
+              color: AppColors.seeMoreBackground, 
               child: ListView.builder(
                 itemCount: state.characters.length,
                 itemBuilder: (context, index) {
                   final character = state.characters[index];
                   return Card(
-                    color: AppColors.cardBackground, // Set the card color to blue
+                    color: AppColors.cardBackground, 
                     child: ListTile(
                       title: Text(character.name, style: TextStyle(color: Colors.white)),
                     ),
@@ -200,7 +200,7 @@ class AuthorsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Demandez au Bloc de charger les auteurs lorsque l'onglet est construit
+    // Demander au Bloc de charger les auteurs lorsque l'onglet est construit
     BlocProvider.of<ComicsBloc>(context).add(FetchComicAuthorsEvent(comic.id));
 
     return BlocBuilder<ComicsBloc, ComicsState>(
@@ -210,13 +210,13 @@ class AuthorsTab extends StatelessWidget {
         } else if (state is AuthorsLoadedState) {
           // Affiche la liste des auteurs
           return Container(
-            color: AppColors.seeMoreBackground, // Assurez-vous que cette couleur est définie dans votre thème
+            color: AppColors.seeMoreBackground, 
             child: ListView.builder(
               itemCount: state.authors.length,
               itemBuilder: (context, index) {
                 final author = state.authors[index];
                 return Card(
-                  color: AppColors.cardBackground, // Set the card color to blue
+                  color: AppColors.cardBackground, 
                   child: ListTile(
                     title: Text(author, style: TextStyle(color: Colors.white)),
                   ),

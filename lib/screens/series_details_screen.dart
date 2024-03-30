@@ -141,7 +141,7 @@ class HistoryTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.seeMoreBackground, // Set the background color to black
+      color: AppColors.seeMoreBackground, 
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(8.0),
         child: HtmlWidget(
@@ -160,7 +160,7 @@ class CharactersTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ApiService apiService = ApiService(); // Ensure this instance is correctly instantiated.
+    ApiService apiService = ApiService(); 
 
     return BlocProvider<CharacterBloc>(
       create: (context) => CharacterBloc(apiService)..add(FetchCharactersBySerieIdEvent(serie.id)),
@@ -170,13 +170,13 @@ class CharactersTab extends StatelessWidget {
             return Center(child: CircularProgressIndicator(color: Colors.white));
           } else if (state is CharacterLoadedState) {
             return Container(
-              color: AppColors.seeMoreBackground, // Set the background color to black
+              color: AppColors.seeMoreBackground, 
               child: ListView.builder(
                 itemCount: state.characters.length,
                 itemBuilder: (context, index) {
                   final character = state.characters[index];
                   return Card(
-                    color: AppColors.cardBackground, // Set the card color to blue
+                    color: AppColors.cardBackground, 
                     child: ListTile(
                       title: Text(character.name, style: TextStyle(color: Colors.white)),
                     ),
@@ -206,7 +206,7 @@ class EpisodesTab extends StatelessWidget {
     context.read<EpisodeBloc>().add(FetchEpisodesBySeriesIdEvent(series.id));
 
     return Container(
-      color: AppColors.seeMoreBackground, // Utiliser la couleur de fond définie dans votre thème
+      color: AppColors.seeMoreBackground, 
       child: BlocBuilder<EpisodeBloc, EpisodeState>(
         builder: (context, state) {
           if (state is EpisodeLoadingState) {
@@ -229,7 +229,6 @@ class EpisodesTab extends StatelessWidget {
   }
 
 Widget _buildEpisodeCard(Episode episode, int index) {
-  // Convertir l'index en un numéro d'épisode séquentiel (en commençant par 01, 02, etc.)
   String episodeNumber = (index + 1).toString().padLeft(2, '0');
 
   return Card(

@@ -83,9 +83,9 @@ class _SearchScreenState extends State<SearchScreen> {
                         children: items.map((item) {
                           // S'assurer que l'URL de l'image et le nom ne sont pas nulls
                           final String imageUrl = item['imageUrl'] ??
-                              ''; // Utilisez une chaîne vide si null
+                              ''; 
                           final String name = item['name'] ??
-                              'Inconnu'; // Utilisez 'Inconnu' ou toute autre chaîne par défaut si null
+                              'Inconnu'; 
 
                           return ListTile(
                             leading: imageUrl.isNotEmpty
@@ -96,9 +96,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                         50), // Affiche un espace vide si l'URL de l'image est vide
                             title: Text(name,
                                 style: const TextStyle(color: Colors.white)),
-                            onTap: () {
-                              // Naviguer vers le détail de l'élément sélectionné si nécessaire
-                            },
+                            onTap: () {},
+                        
                           );
                         }).toList(),
                       );
@@ -137,4 +136,6 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
     );
   }
+
+
 }

@@ -15,7 +15,7 @@ class ComicsListScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Comics les plus populaires',
           style: TextStyle(color: Colors.white)),
-        backgroundColor: AppColors.seeMoreBackground, // Utilisez la couleur définie dans theme.dart
+        backgroundColor: AppColors.seeMoreBackground, 
       ),
       body: BlocBuilder<ComicsBloc, ComicsState>(
         builder: (context, state) {
@@ -41,7 +41,7 @@ class ComicsListScreen extends StatelessWidget {
           }
         },
       ),
-      backgroundColor: AppColors.seeMoreBackground, // Mettez la couleur de fond ici
+      backgroundColor: AppColors.seeMoreBackground, 
     );
   }
 }

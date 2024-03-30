@@ -21,10 +21,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context ) {
-    // Créez une instance de votre service API.
+    // Créer une instance de votre service API.
     final ApiService apiService = ApiService();
 
-    // Utilisez MultiBlocProvider pour injecter les blocs.
+    // Utiliser MultiBlocProvider pour injecter les blocs.
     return MultiBlocProvider(
       providers: [
         BlocProvider<ComicsBloc>(

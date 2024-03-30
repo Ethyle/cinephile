@@ -1,5 +1,5 @@
 class Episode {
-  final int seriesId; // Changé en String pour correspondre aux données JSON
+  final int seriesId; 
   final String name;
   final String description;
   final String imageUrl;
@@ -22,7 +22,7 @@ class Episode {
       description: json['description'] ?? 'Information inconnue',
       imageUrl: json['image']['icon_url'] ?? 'default_image_url', 
       airDate: json['air_date'] ?? 'Date inconnue',
-      episodeNumber: json['episode_number'], // Aucune valeur par défaut n'est fournie; cela devrait être géré si nécessaire
+      episodeNumber: json['episode_number'], 
     );
   }
 }

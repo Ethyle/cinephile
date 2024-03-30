@@ -4,7 +4,7 @@ class Movie {
   final String imageUrl;
   final String synopsis;
   final String releaseDate;
-  final String duration; // Durée du film en minutes, représentée en tant que String dans le JSON
+  final String duration;
   final String budget;
   final String boxOfficeRevenue;
   final String totalRevenue;
@@ -34,7 +34,7 @@ class Movie {
       id: json['id'],
       name: json['name'] ?? 'Information inconnue',
       imageUrl: json['image']['original_url'] ?? 'Information inconnue', 
-      synopsis: json['deck'] ?? 'Information inconnue', // Utilisation de 'deck' comme description
+      synopsis: json['deck'] ?? 'Information inconnue',
       releaseDate: json['release_date'] ?? 'Information inconnue',
       duration: json['runtime'] ?? 'Information inconnue',
       budget: json['budget'] ?? 'Information inconnue',

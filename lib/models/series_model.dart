@@ -4,8 +4,7 @@ class Series {
   final String imageUrl;
   final String title;
   final int numberOfEpisodes;
-  final String releaseDate; // 'start_year' semble être l'année de début, donc il pourrait être traité différemment.
-  // Suppression de characterCredits car il n'est pas présent dans le JSON fourni.
+  final String releaseDate; 
   final String apiDetailUrl;
 
   Series({
@@ -22,10 +21,10 @@ class Series {
     return Series(
       id: json['id'] ?? 0,
       synopsis: json['description'] ?? 'Information inconnue',
-      imageUrl: json['image']['medium_url'] ?? 'information inconnue', // Assumant que 'medium_url' est approprié ici.
+      imageUrl: json['image']['medium_url'] ?? 'information inconnue', 
       title: json['name'] ?? 'Information inconnue',
       numberOfEpisodes: json['count_of_episodes'] ?? 0,
-      releaseDate: json['start_year']?.toString() ?? 'Information inconnue', // Converti 'start_year' en String si nécessaire.
+      releaseDate: json['start_year']?.toString() ?? 'Information inconnue', 
       apiDetailUrl: json['api_detail_url'] ?? '',
     );
   }

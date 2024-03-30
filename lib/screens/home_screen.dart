@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     // Initialisation des Blocs après un court délai
     Future.delayed(Duration.zero, () {
-      // Fetch data from the blocs
+      // Fetch données des blocs
       BlocProvider.of<ComicsBloc>(context).add(FetchComicsEvent());
       BlocProvider.of<MoviesBloc>(context).add(FetchMoviesEvent());
       BlocProvider.of<SeriesBloc>(context).add(FetchSeriesEvent());
@@ -143,7 +143,7 @@ Widget _buildNewsSection() {
       } else if (state is NewsErrorState) {
         return Text(state.error);
       }
-      return Container(); // State initial ou autre
+      return Container(); 
     },
   );
 }
@@ -158,7 +158,7 @@ Widget _buildComicsSection() {
       } else if (state is ComicsErrorState) {
         return Text(state.error);
       }
-      return Container(); // State initial ou autre
+      return Container(); 
     },
   );
 }
@@ -187,7 +187,7 @@ if (state is MoviesLoadingState) {
       } else if (state is MoviesErrorState) {
         return Text(state.error);
       }
-      return Container(); // State initial ou autre
+      return Container(); 
           },
   );
 }
@@ -202,7 +202,7 @@ if (state is CharacterLoadingState) {
       } else if (state is CharacterErrorState) {
         return Text(state.error);
       }
-      return Container(); // State initial ou autre  
+      return Container();   
         },
   );
 }
@@ -233,7 +233,7 @@ Widget _buildComicsList(List<Comic> comics) {
       itemBuilder: (context, index) {
         final comic = comics[index];
         return ComicsHomeWidget(
-          comic: comic, // Passez l'objet comic ici
+          comic: comic, 
         );
       },
     ),
@@ -290,7 +290,6 @@ Widget _buildCharactersList(List<Character> characters) {
 }
 
   Widget _buildHorizontalCardList() {
-    // Ceci est juste un exemple de données fictives, remplacez par vos propres widgets de cartes.
     return SizedBox(
       height: 200,
       child: ListView.builder(
@@ -304,7 +303,6 @@ Widget _buildCharactersList(List<Character> characters) {
   }
 
   Widget _buildCard() {
-    // Ceci est juste une carte fictive, remplacez par votre CustomCard widget.
     return const Card(
       color: AppColors.cardBackground,
       child: SizedBox(

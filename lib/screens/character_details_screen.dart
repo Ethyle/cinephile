@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart'; // Importez ce package
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart'; 
 import '../models/character_model.dart';
 
 class CharacterDetailsScreen extends StatelessWidget {
@@ -24,14 +24,12 @@ class CharacterDetailsScreen extends StatelessWidget {
                 children: [
                   Text('Description', style: Theme.of(context).textTheme.titleLarge),
                   SingleChildScrollView(
-                    // Utilisez HtmlWidget pour afficher la description HTML
                     child: HtmlWidget(
-                      character.description, // Utilisez character.description pour afficher la description en HTML
-                      textStyle: Theme.of(context).textTheme.bodyLarge, // Appliquez le style de texte souhaité
+                      character.description,
+                      textStyle: Theme.of(context).textTheme.bodyLarge, 
                     ),
                   ),
                   const SizedBox(height: 10),
-                  // Ici, vous pouvez ajouter d'autres informations pertinentes sur le personnage
                 ],
               ),
             ),

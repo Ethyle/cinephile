@@ -15,7 +15,7 @@ class SeriesListScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Séries les plus populaires',
           style: TextStyle(color: Colors.white)),
-        backgroundColor: AppColors.seeMoreBackground, // Utiliser la couleur définie dans theme.dart
+        backgroundColor: AppColors.seeMoreBackground, 
       ),
       body: BlocBuilder<SeriesBloc, SeriesState>(
         builder: (context, state) {
@@ -24,12 +24,12 @@ class SeriesListScreen extends StatelessWidget {
           } else if (state is SeriesLoadedState) {
             return ListView.separated(
               itemCount: state.series.length,
-              separatorBuilder: (context, index) => Divider(color: AppColors.seeMoreBackground), // Diviseur personnalisé
+              separatorBuilder: (context, index) => Divider(color: AppColors.seeMoreBackground),
               itemBuilder: (context, index) {
                 final serie = state.series[index];
                 return SeriesWidget(
                   series: serie,
-                  rank: index + 1, // Passer le rang pour afficher le numéro
+                  rank: index + 1,
                 );
               },
             );
@@ -42,7 +42,7 @@ class SeriesListScreen extends StatelessWidget {
           }
         },
       ),
-      backgroundColor: AppColors.seeMoreBackground, // Mettez la couleur de fond ici
+      backgroundColor: AppColors.seeMoreBackground, 
     );
   }
 }

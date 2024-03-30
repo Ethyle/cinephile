@@ -23,8 +23,6 @@ ThemeData buildAppTheme() {
       color: AppColors.elementBackground,
     ),
     textTheme: const TextTheme(
-      // Définissez ici les styles de texte spécifiques à votre application
     ),
-    // Définissez d'autres propriétés de thème selon vos besoins
   );
 }
